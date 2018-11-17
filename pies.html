@@ -10,18 +10,11 @@
 
 <script>
 
-// SCALING OPTIONS
-// scaling can have values as follows with full being the default
-// "fit"    sets canvas and stage to dimensions and scales to fit inside window size
-// "outside"    sets canvas and stage to dimensions and scales to fit outside window size
-// "full"   sets stage to window size with no scaling
-// "tagID"  add canvas to HTML tag of ID - set to dimensions if provided - no scaling
-
-var scaling = "fit"; // this will resize to fit inside the screen dimensions
+var scaling = "fit"; 
 var width = 1024;
 var height = 768;
-var color = light; // ZIM colors like green, blue, pink, faint, clear, etc. available globally
-var outerColor = dark; // any HTML colors like "violet", "#333", etc. fine to use
+var color = light; 
+var outerColor = dark;
 
 var frame = new Frame(scaling, width, height, color, outerColor);
 frame.on("ready", function() {
@@ -35,35 +28,29 @@ frame.on("ready", function() {
     // see http://zimjs.com/docs.html for documentation
     // see http://zimjs.com/bits.html for 64 Interactive Media techniques
 
-    // put your code here (you can delete this sample code)
+    
+var rectangle = new Container(stageW-50, stageH).center();
 
-    // with chaining - can also assign to a variable for later access
-var rectangles = new Container(stageW, stageH).addTo();
+//var rectangle = new Rectangle(stageW-50, stageH).center(holder);
 
-var colors = [pink, green, blue, purple, yellow, red, orange]; //will change to array of different pies
+var colors = [pink, green, blue, purple, yellow, red, orange]; 
 
-//var fall = rand(1,100);
+//if i need to make a container to put the pies in?? so they dont go to the edge
 
 var intervalID = interval(1000, function(){
       //frame.asset("line.mp3").play();
-      rect2 = new Rectangle({
+      var pie = new Rectangle({
             width:100,
             height:50,
             color:shuffle(colors)[0]
       })
-      .addTo(rectangles)
-      .reg(1)
-      .pos({
-        x:rand(stageW+50),
-        y:0, //starts at the top
-      container:rectangles
-      });
+      .center(rectangle)
+     // .reg(1)
+      .pos(rand(stageW-150), 0, false, false, rectangle);
 
-      rect2.animate({ //must be inside interval cause ver rect2 only exists in the interval
+      pie.animate({ 
             props:{
-            y:1000
-            //scaleY:stageH,
-            //y:-rect2
+            y:727
             },
             time:2000,
             ease:"linear",
@@ -72,12 +59,16 @@ var intervalID = interval(1000, function(){
             }
 
       })
+//pie.outline();
+
 })
 
+
       Ticker.add(function(){
-            rectangles.loop(function(rect2){
-                  if (rect2.done == true) {
-                        rect2.removeFrom();
+            rectangle.loop(function(pie){
+                  if (pie.done == true) {
+                        pie.removeFrom()
+                        zog("removed");
                   // } else if (rect.hitTestBounds(player)) {
                   //             rect.removeFrom();
                   //            // frame.asset("hit.mp3").play();
