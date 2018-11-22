@@ -27,9 +27,9 @@ var width = 1024;
 var height = 768;
 var color = blue; // ZIM colors like green, blue, pink, faint, clear, etc. available globally
 var outerColor = dark; // any HTML colors like "violet", "#333", etc. fine to use
-//var assets = ["pie.jpg", "cannon.jpg"];
-//var path = "assets/";
-//var frame = new Frame(scaling, width, height, color, outerColor, assets, path);
+// var assets = [""];
+// var path = "assets/";
+// var frame = new Frame(scaling, width, height, color, outerColor, assets, path);
 
 var frame = new Frame(scaling, width, height, color, outerColor);
 frame.on("ready", function() {
@@ -95,6 +95,26 @@ var colors = [pink, green, "blue", purple, yellow, red, orange];
 
 var pie;
 
+
+  function question(){
+    var questionbox = new Container().loc(pie);
+    new Rectangle(200, 60, pink).addTo(questionbox);
+
+    function getRandomInt(min, max) {
+      min = Math.ceil(1);
+      max = Math.floor(10);
+      return Math.floor(Math.random() *(max - min + 1)) + min;
+      }
+
+      var a = getRandomInt();
+      var b = getRandomInt();
+
+      var sum = a + b;
+
+      new Label({text: a +" + "+ b +" = " + sum}).center(questionbox);
+  }
+
+
 var intervalID = interval(1000, function(){
       //frame.asset("line.mp3").play();
     pie = new Rectangle({
@@ -105,6 +125,7 @@ var intervalID = interval(1000, function(){
       .center(rectangle)
      // .reg(1)
       .pos(rand(stageW-150), 0, false, false, rectangle);
+      question();
       pie.animate({ 
             props:{
             y:727
@@ -143,7 +164,34 @@ var intervalID = interval(1000, function(){
             }, true);
       }, stage);
 
-    stage.update(); // this is needed to show any changes
+
+//**************equations**********************
+
+
+
+  // plus = frame.asset("plus.png").sca(.3).centerReg().addTo(questionbox).pos(10);
+  // equal = frame.asset("equals.png").sca(.3).centerReg().addTo(questionbox);
+
+  // function question(){
+  //   var questionbox = new Container().loc(pie);
+  //   new Rectangle(200, 60, pink).addTo(questionbox);
+
+  //   function getRandomInt(min, max) {
+  //     min = Math.ceil(1);
+  //     max = Math.floor(10);
+  //     return Math.floor(Math.random() *(max - min + 1)) + min;
+  //     }
+
+  //     var a = getRandomInt();
+  //     var b = getRandomInt();
+
+  //     var sum = a + b;
+
+  //     new Label({text: a +" + "+ b +" = " + sum}).center(questionbox);
+  // }
+
+
+  stage.update(); // this is needed to show any changes
 
 }); // end of ready
 
