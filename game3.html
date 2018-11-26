@@ -1,0 +1,198 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Pie In The Sky!</title>
+
+<!-- Welcome to ZIM at https://zimjs.com - Code Creativity!              	        -->
+<!-- ZIM runs on the HTML Canvas powered by JavaScript and CreateJS https://createjs.com -->
+<!-- Founded by Inventor Dan Zen - http://danzen.com - Canadian New Media Award Winner 	-->
+<!-- ZIM is free to use. You can donate to help improve ZIM at http://zimjs.com/donate 	-->
+
+<script src="https://d309knd7es5f10.cloudfront.net/createjs_1.1_min.js"></script>
+<script src="https://d309knd7es5f10.cloudfront.net/zim_9.2.1.js"></script>
+<!-- use zimjs.com/distill for minified individual functions! -->
+
+<script>
+
+// SCALING OPTIONS
+// scaling can have values as follows with full being the default
+// "fit"	sets canvas and stage to dimensions and scales to fit inside window size
+// "outside"	sets canvas and stage to dimensions and scales to fit outside window size
+// "full"	sets stage to window size with no scaling
+// "tagID"	add canvas to HTML tag of ID - set to dimensions if provided - no scaling
+
+var scaling = "fit"; // this will resize to fit inside the screen dimensions
+var width = 1024;
+var height = 768;
+var color = blue; // ZIM colors like green, blue, pink, faint, clear, etc. available globally
+var outerColor = dark; // any HTML colors like "violet", "#333", etc. fine to use
+// var assets = [""];
+// var path = "assets/";
+// var frame = new Frame(scaling, width, height, color, outerColor, assets, path);
+
+var frame = new Frame(scaling, width, height, color, outerColor);
+frame.on("ready", function() {
+    zog("ready from ZIM Frame"); // logs in console (F12 - choose console)
+
+    var stage = frame.stage;
+    var stageW = frame.width;
+    var stageH = frame.height;
+
+    // see http://zimjs.com/learn.html for video and code tutorials
+    // see http://zimjs.com/docs.html for documentation
+    // see http://zimjs.com/bits.html for 64 Interactive Media techniques
+
+
+//**************cannon**********************
+
+    var dock = new Container(0,0).centerReg();
+    var deck = new Rectangle(200, 50, tin).addTo(dock).centerReg();
+    dock.pos(stageW/2, stageH-deck.height/2);
+
+    new Rectangle(60, 50, tin).centerReg().pos({y: stageH-deck.height*2}).addTo(deck);
+
+    new MotionController({
+        target: dock, 
+        type: "keydown",
+        diagonal: false,
+        axis: "horizontal",
+        speed: 15,
+        boundary: new Boundary(100, 0, stageW-200, stageH)
+    }); 
+
+    var circ = new Circle(20, white)
+
+    function fire(){            
+            circ.loc(dock.x, stageH-deck.height*2);
+            circ.animate({
+                props: {y:-circ.radius},
+                time: 1000,
+                ease: "linear",
+                call: function(target){
+                    target.removeFrom();
+                    }
+                }).bot();
+    }
+
+    frame.on("keydown", function(e){  
+        if (e.keyCode == 38){     //up arrow key
+            fire();
+        }
+    });
+
+
+
+//**************pies**********************
+
+var rectangle = new Container(stageW-50, stageH).center();
+
+//var rectangle = new Rectangle(stageW-50, stageH).center(holder);
+
+var colors = [pink, green, "blue", purple, yellow, red, orange]; 
+
+//if i need to make a container to put the pies in?? so they dont go to the edge
+
+var pie;
+
+
+  // function question(){
+  //   box = new Rectangle(200, 60, pink).loc(pie);
+
+  //   function getRandomInt(min, max) {
+  //     min = Math.ceil(1);
+  //     max = Math.floor(10);
+  //     return Math.floor(Math.random() *(max - min + 1)) + min;
+  //     }
+
+  //     var a = getRandomInt();
+  //     var b = getRandomInt();
+
+  //     var sum = a + b;
+
+  //     new Label({text: a +" + "+ b +" = " + sum}).center(box);
+  // }
+
+
+var intervalID = interval(1000, function(){
+      //frame.asset("line.mp3").play();
+    var piecontainer = new Container().pos(rand(stageW-150), 0, false, false, rectangle);
+
+    var pie = new Rectangle({
+            width:100,
+            height:50,
+            color:shuffle(colors)[0]
+      }).center(piecontainer);
+     // .reg(1)
+    
+    function question(){
+    box = new Rectangle(200, 60, pink).center(piecontainer).mov({y: -60});
+
+      function getRandomInt(min, max) {
+        min = Math.ceil(1);
+        max = Math.floor(10);
+        return Math.floor(Math.random() *(max - min + 1)) + min;
+      }
+
+        var a = getRandomInt();
+        var b = getRandomInt();
+        var sum = a + b;
+        new Label({text: a +" + "+ b +" = " + sum}).center(box);
+    }
+
+    question();
+    
+    piecontainer.animate({ 
+            props:{
+            y:727
+            },
+            time:2000,
+            ease:"linear",
+            call:function(target){
+                  target.done=true;
+            }
+
+      });
+//pie.outline();
+
+});
+
+
+      Ticker.add(function(){
+            rectangle.loop(function(pie){
+                  if (pie.done == true) {
+                        pie.removeFrom();
+                        zog("removed"); }
+                  if (pie.hitTestBounds(circ)) {
+                        pie.removeFrom();
+                        circ.removeFrom(); 
+                        stage.update();}
+                  //             rect.removeFrom();
+                  //            // frame.asset("hit.mp3").play();
+                  //             //change score
+                  //             intervalID.clear();
+                  //             stopAnimate();
+                  //             controller.enabled = false;
+
+                  //             frame.color = red;
+                  //             stage.update();
+                  
+            }, true);
+      }, stage);
+
+
+
+  stage.update(); // this is needed to show any changes
+
+}); // end of ready
+
+</script>
+
+<meta name="viewport" content="width=device-width, user-scalable=no" />
+
+</head>
+
+<body>
+<!-- canvas with id="myCanvas" is made by zim Frame -->
+</body>
+</html>
