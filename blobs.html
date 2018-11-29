@@ -83,7 +83,7 @@ frame.on("ready", function() {
     
     var clicky = new Rectangle(10,10).center();
 
-    stage.on("click", function(){
+    clicky.on("click", function(){
         new Emitter({
             obj: blobs,
             interval: 100,
