@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8" />
-<title>ZIM Frame - Fit Template</title>
+<title>Blobs</title>
 
 <!-- Welcome to ZIM at https://zimjs.com - Code Creativity!              	        -->
 <!-- ZIM runs on the HTML Canvas powered by JavaScript and CreateJS https://createjs.com -->
@@ -45,7 +45,7 @@ frame.on("ready", function() {
     // with chaining - can also assign to a variable for later access
    
 
-            frame.on("keydown", function(e){
+    frame.on("keydown", function(e){
         zog(e.keyCode); //keycode tells you which key was pressed -they are numbers r=82 etc
         if (e.keyCode == 82){  //**** DOUBLE EQUAL 
             zog("success!");
@@ -53,9 +53,6 @@ frame.on("ready", function() {
         }
     });
 
-    for(var i=0; i<bloblist.length-1; i++){
-        blobdata = 
-    } 
 
     var blobdata = [
             [[4.8,-63.1,0,0,-23.4,-20.4,29.6,25.7],[-9.8,2.4,0,0,-4,-25.8,3.7,23.7],[-32.9,52.7,0,0,46,-17.6,-46.7,17.9],[-81.6,-36.1,0,0,0,50,0,-50]],
@@ -66,6 +63,15 @@ frame.on("ready", function() {
            [[-5.9,-46.7,0,0,-27.1,-3,25.3,2.8],[45.7,3.9,0,0,-2,-32.2,1.7,28.2],[-1,67.4,0,0,23.3,0,-28.3,0],[-71.4,2,0,0,0,50,0,-50]] 
     ]
     
+    var blobs = [];
+
+    for(var i=0; i<blobdata.length; i++){
+        blobs.push(new Blob({points: blobdata[i], lockControls: true, showControls: false}));
+        //zog(blob);
+    } 
+
+    // var blobby = 
+
     // var blob1 = new Blob({points: [[4.8,-63.1,0,0,-23.4,-20.4,29.6,25.7],[-9.8,2.4,0,0,-4,-25.8,3.7,23.7],[-32.9,52.7,0,0,46,-17.6,-46.7,17.9],[-81.6,-36.1,0,0,0,50,0,-50]]});
 
     // var blob2 = new Blob({points:[[-3.2,-86.3,0,0,-23.4,-20.4,29.6,25.7],[-19.4,-24,0,0,23.4,11.5,-25.1,-12.4],[-73.6,-59.3,0,0,0,50,0,-50]]});
@@ -79,17 +85,19 @@ frame.on("ready", function() {
     // var blob6 = new Blob({points: [[-5.9,-46.7,0,0,-27.1,-3,25.3,2.8],[45.7,3.9,0,0,-2,-32.2,1.7,28.2],[-1,67.4,0,0,23.3,0,-28.3,0],[-71.4,2,0,0,0,50,0,-50]]});
 
         var splatter = new Emitter({
-            obj: [blob1, blob2, blob3, blob4, blob5, blob6],
-            num: 5,
-            force: 10,
+            obj: blobs,
+            interval: 100,
+            num: 7,
+            force: 12,
+            fade: false,
+            gravity: 20,
             startPaused: true,
+            cache: true,
             random: {
-                color:[red],
+                color:["crimson", "red"],
                 rotation:{min:0, max:360},
-                regX:{min:-50, max:50},
-                regY:{min:-50, max:50}
                 }
-        }).centerReg().spurt({time: 500});
+        }).centerReg().sca(.3).spurt({time: 200});
 
 
     stage.update(); // this is needed to show any changes
