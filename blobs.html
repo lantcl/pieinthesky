@@ -27,8 +27,10 @@ var width = 1024;
 var height = 768;
 var color = light; // ZIM colors like green, blue, pink, faint, clear, etc. available globally
 var outerColor = dark; // any HTML colors like "violet", "#333", etc. fine to use
+var assets =["pie.png"];
+var path= "assets/";
 
-var frame = new Frame(scaling, width, height, color, outerColor);
+var frame = new Frame(scaling, width, height, color, outerColor, assets, path);
 frame.on("ready", function() {
     zog("ready from ZIM Frame"); // logs in console (F12 - choose console)
 
@@ -44,14 +46,14 @@ frame.on("ready", function() {
 
     // with chaining - can also assign to a variable for later access
    
-
-    frame.on("keydown", function(e){
-        zog(e.keyCode); //keycode tells you which key was pressed -they are numbers r=82 etc
-        if (e.keyCode == 82){  //**** DOUBLE EQUAL 
-            zog("success!");
-            blob.recordPoints(true);
-        }
-    });
+   
+    // frame.on("keydown", function(e){
+    //     zog(e.keyCode); //keycode tells you which key was pressed -they are numbers r=82 etc
+    //     if (e.keyCode == 82){  //**** DOUBLE EQUAL 
+    //         zog("success!");
+    //         blob.recordPoints(true);
+    //     }
+    // });
 
 
     var blobdata = [
@@ -78,8 +80,11 @@ frame.on("ready", function() {
     // var blob5 = new Blob({points: [[0,12.2,0,0,-50,0,50,0],[74.4,46.5,0,0,0,-50,0,50],[0,100,0,0,16.3,-5.6,-47.3,16.2],[-96.8,16.8,0,0,0,50,0,-50]]});
 
     // var blob6 = new Blob({points: [[-5.9,-46.7,0,0,-27.1,-3,25.3,2.8],[45.7,3.9,0,0,-2,-32.2,1.7,28.2],[-1,67.4,0,0,23.3,0,-28.3,0],[-71.4,2,0,0,0,50,0,-50]]});
+    
+    var clicky = new Rectangle(10,10).center();
 
-        var splatter = new Emitter({
+    stage.on("click", function(){
+        new Emitter({
             obj: blobs,
             interval: 100,
             num: 7,
@@ -93,6 +98,10 @@ frame.on("ready", function() {
                 rotation:{min:0, max:360},
                 }
         }).centerReg().sca(.3).spurt({time: 200});
+        frame.asset("pie.png").sca(.2).center();
+    })
+
+
 
 
     stage.update(); // this is needed to show any changes
