@@ -116,6 +116,26 @@ frame.on("ready", function() {
                 });
 
 
+
+        var quit = new Button({
+                            label:"Quit",
+                            backgroundColor:"black",
+                            rollBackgroundColor:"pink",
+                            corner:15
+                            }).addTo(game) .mov(770,600)
+
+                        quit.on("click", function(){
+                        game.animate({
+                            props:{x:stageW}
+                            });
+
+                        landing.animate({
+                                props:{x:0}
+                                });
+                });
+
+
+
         var label = new Label({
                 text:"Line one of Instruction",
                 color:"white"
