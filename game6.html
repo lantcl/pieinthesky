@@ -182,24 +182,28 @@ var intervalID = interval(5000, function(){
         var sum = a + b;
         new Label({text: a +" + "+ b +" = ?"}).center(box);
 
-        answer = new Circle(30, pink).pos(50, 50, true);
+        answer = new Circle(30, pink);
         new Label({text: sum}).center(answer);
 
         answer.total = sum;
-        box.total = sum;
+        piecontainer.total = sum;
 
-        fake1 = new Circle(30, pink).pos(50, 150, true);
+        fake1 = new Circle(30, pink);
         new Label({text: getRandomInt()}).center(fake1);
         fake1.total = false;
 
-        fake2 = new Circle(30, pink).pos(50, 250, true);
+        fake2 = new Circle(30, pink);
         new Label({text: getRandomInt()}).center(fake2);
         fake1.total = false;
 
         answerArray = [answer, fake1, fake2];
+        answerPositions = [[50, 50, true],[50, 150, true],[50, 250, true]];
+        //not sure how to randomize the positions but use all 3 
 
+        
     }
-
+//can we have the three labels randomize it's location (bw the 3 spots)
+//i think the color = red, is on the circle. can 
     question();
     
     piecontainer.animate({ 
