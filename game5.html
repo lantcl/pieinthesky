@@ -177,15 +177,11 @@ var intervalID = interval(5000, function(){
 );
 
 // ****choose the answer*****
-// want to arrow up and down between the three labels (answer, fake1, and fake2) 
-// the chosen label is indicated by it changing color (red?)
+//x want to arrow up and down between the three labels (answer, fake1, and fake2) 
+//x the chosen label is indicated by it changing color (red?)
 // after the label is chosen, we can shoot this particular number , then an if test when it hits the pie, if the equation matches (does cannon (with answer) = sum)
 
-
-selectedAnswer = 0
-
-
-//*****THIS ONE WORKS
+//**THIS ONE WORKS
 // frame.on("keydown", function(e){
 //   // zog(e.keyCode);
 //   // selectedAnswer ++; //with each keycode, the answer increases by 1 (this is limited in the answeredArray[]...)
@@ -197,33 +193,38 @@ selectedAnswer = 0
 //   answerArray[selectedAnswer%answerArray.length].color = red; //the variable selected in the array turns red. it goes up to the length of the array (3)
 // })
 
+selectedAnswer = 0
 
-
-//i was able to get it the chosen circle color to go up and down, but for some reason, doesn't start at 0 (The first var), and when it becomes -ve, it breaks
+//i was able to get it the chosen circle color to go up and down, but for some reason, doesn't start at 0 (The first var)
 frame.on("keydown", function(e){
   if (e.keyCode == 38){     //up arrow
+          if(selectedAnswer > 0){
             selectedAnswer --;
-            selectedAnswer > 0; //doesn't work
-            selectedAnswer < answerArray.length //does this do anything?
-              // zog(e.keyCode);
-            zog(selectedAnswer);
-            loop(answerArray, function(answer){
-            answer.color = pink;
-  })
-  answerArray[selectedAnswer%answerArray.length].color = red; //the variable selected in the array turns red. it goes up to the length of the array (3)
-        }
-  else if (e.keyCode == 40){   //down arrow
-             selectedAnswer ++;
-            selectedAnswer < answerArray.length
-              // zog(e.keyCode);
-            zog(selectedAnswer);
-            loop(answerArray, function(answer){
-            answer.color = pink;
-  })
-  answerArray[selectedAnswer%answerArray.length].color = red; //the variable selected in the array turns red. it goes up to the length of the array (3)
+          }
+          else{selectedAnswer = 0}
+            
+      // selectedAnswer < answerArray.length //does this do anything?
+      // zog(e.keyCode);
+      zog(selectedAnswer);
+      loop(answerArray, function(answer){
+      answer.color = pink;
+    })
+    answerArray[selectedAnswer%answerArray.length].color = red; //the variable selected in the array turns red. it goes up to the length of the array (3)
   }
+  else if (e.keyCode == 40){   //down arrow
+          if(selectedAnswer <2){
+            selectedAnswer ++;
+          }
+          else{selectedAnswer = 2}
 
- 
+      // selectedAnswer < answerArray.length
+      // zog(e.keyCode);
+      zog(selectedAnswer);
+      loop(answerArray, function(answer){
+      answer.color = pink;
+    })
+  answerArray[selectedAnswer%answerArray.length].color = red; //the variable selected in the array turns red. it goes up to the length of the array (3)
+  } 
 })
 
 
