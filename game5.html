@@ -113,8 +113,12 @@ var pie;
   //     new Label({text: a +" + "+ b +" = " + sum}).center(box);
   // }
 
+var answer
+var fake1 
+var fake2 
+var answerArray
 
-var intervalID = interval(1000, function(){
+var intervalID = interval(5000, function(){
       //frame.asset("line.mp3").play();
     var piecontainer = new Container().pos(rand(stageW-150), 0, false, false, rectangle);
 
@@ -125,8 +129,11 @@ var intervalID = interval(1000, function(){
       }).center(piecontainer);
      // .reg(1)
     
+        
+     
+
     function question(){
-    box = new Rectangle(200, 60, pink).center(piecontainer).mov({y: -60});
+      box = new Rectangle(200, 60, pink).center(piecontainer).mov({y: -60});
 
       function getRandomInt(min, max) {
         min = Math.ceil(1);
@@ -139,14 +146,16 @@ var intervalID = interval(1000, function(){
         var sum = a + b;
         new Label({text: a +" + "+ b +" = ?"}).center(box);
 
-        var answer = new Circle(30, pink).pos(50, 50, true);
+        answer = new Circle(30, pink).pos(50, 50, true);
         new Label({text: sum}).center(answer);
 
-        var fake1 = new Circle(30, pink).pos(50, 150, true);
+        fake1 = new Circle(30, pink).pos(50, 150, true);
         new Label({text: getRandomInt()}).center(fake1);
 
-        var fake2 = new Circle(30, pink).pos(50, 250, true);
+        fake2 = new Circle(30, pink).pos(50, 250, true);
         new Label({text: getRandomInt()}).center(fake2);
+
+        answerArray = [answer, fake1, fake2];
 
     }
 
@@ -164,12 +173,59 @@ var intervalID = interval(1000, function(){
 
       });
 //pie.outline();
-});
+}, null, true
+);
 
 // ****choose the answer*****
 // want to arrow up and down between the three labels (answer, fake1, and fake2) 
-// the chosen label is indicated by it changing color (dark pink?)
+// the chosen label is indicated by it changing color (red?)
 // after the label is chosen, we can shoot this particular number , then an if test when it hits the pie, if the equation matches (does cannon (with answer) = sum)
+
+
+selectedAnswer = 0
+
+
+//*****THIS ONE WORKS
+// frame.on("keydown", function(e){
+//   // zog(e.keyCode);
+//   // selectedAnswer ++; //with each keycode, the answer increases by 1 (this is limited in the answeredArray[]...)
+//   // selectedAnswer < answerArray.length;
+//   zog(selectedAnswer);
+//   loop(answerArray, function(answer){
+//     answer.color = pink;
+//   })
+//   answerArray[selectedAnswer%answerArray.length].color = red; //the variable selected in the array turns red. it goes up to the length of the array (3)
+// })
+
+
+
+//i was able to get it the chosen circle color to go up and down, but for some reason, doesn't start at 0 (The first var), and when it becomes -ve, it breaks
+frame.on("keydown", function(e){
+  if (e.keyCode == 38){     //up arrow
+            selectedAnswer --;
+            selectedAnswer > 0; //doesn't work
+            selectedAnswer < answerArray.length //does this do anything?
+              // zog(e.keyCode);
+            zog(selectedAnswer);
+            loop(answerArray, function(answer){
+            answer.color = pink;
+  })
+  answerArray[selectedAnswer%answerArray.length].color = red; //the variable selected in the array turns red. it goes up to the length of the array (3)
+        }
+  else if (e.keyCode == 40){   //down arrow
+             selectedAnswer ++;
+            selectedAnswer < answerArray.length
+              // zog(e.keyCode);
+            zog(selectedAnswer);
+            loop(answerArray, function(answer){
+            answer.color = pink;
+  })
+  answerArray[selectedAnswer%answerArray.length].color = red; //the variable selected in the array turns red. it goes up to the length of the array (3)
+  }
+
+ 
+})
+
 
 
 
