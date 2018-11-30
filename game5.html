@@ -113,14 +113,49 @@ var pie;
   //     new Label({text: a +" + "+ b +" = " + sum}).center(box);
   // }
 
-var answer
-var fake1 
-var fake2 
-var answerArray
+var answer;
+var fake1;
+var fake2; 
+var answerArray;
+var splat;
+var piecontainer;
+var currentAnswer;
+
+        //*****Exploding pies*****
+
+  var blobdata = [
+            [[4.8,-63.1,0,0,-23.4,-20.4,29.6,25.7],[-9.8,2.4,0,0,-4,-25.8,3.7,23.7],[-32.9,52.7,0,0,46,-17.6,-46.7,17.9],[-81.6,-36.1,0,0,0,50,0,-50]],
+            [[-3.2,-86.3,0,0,-23.4,-20.4,29.6,25.7],[-19.4,-24,0,0,23.4,11.5,-25.1,-12.4],[-73.6,-59.3,0,0,0,50,0,-50]],
+            [[19.2,-59.9,0,0,-18.7,-20.3,14.5,15.8],[22.3,-5.6,0,0,0,-50,0,50],[8,56.7,0,0,24.4,-16.8,-41.1,28.4],[-27.1,-14.4,0,0,-20.8,43.6,21.6,-45.1]],
+            [[0,12.2,0,0,-50,0,50,0],[74.4,46.5,0,0,0,-50,0,50],[0,100,0,0,16.3,-5.6,-47.3,16.2],[-96.8,16.8,0,0,0,50,0,-50]],
+           [[-5.9,-46.7,0,0,-27.1,-3,25.3,2.8],[45.7,3.9,0,0,-2,-32.2,1.7,28.2],[-1,67.4,0,0,23.3,0,-28.3,0],[-71.4,2,0,0,0,50,0,-50]] 
+    ]
+    
+  var blobs = [];
+
+  for(var i=0; i<blobdata.length; i++){
+      blobs.push(new Blob({points: blobdata[i], lockControls: true, showControls: false}));
+        //zog(blob);
+    } 
+
 
 var intervalID = interval(5000, function(){
       //frame.asset("line.mp3").play();
-    var piecontainer = new Container().pos(rand(stageW-150), 0, false, false, rectangle);
+    piecontainer = new Container().pos(rand(stageW-150), 0, false, false, rectangle);
+      splat = new Emitter({
+            obj: blobs,
+            interval: 100,
+            num: 7,
+            force: 12,
+            fade: false,
+            gravity: 20,
+            cache: true,
+            startPaused: true, 
+            random: {
+                color:["crimson", "red"],
+                rotation:{min:0, max:360},
+                }
+        }).centerReg().sca(.3);
 
     var pie = new Rectangle({
             width:100,
@@ -128,9 +163,10 @@ var intervalID = interval(5000, function(){
             color:shuffle(colors)[0]
       }).center(piecontainer);
      // .reg(1)
-    
-        
-     
+
+
+
+//******questions*******     
 
     function question(){
       box = new Rectangle(200, 60, pink).center(piecontainer).mov({y: -60});
@@ -149,11 +185,16 @@ var intervalID = interval(5000, function(){
         answer = new Circle(30, pink).pos(50, 50, true);
         new Label({text: sum}).center(answer);
 
+        answer.total = sum;
+        box.total = sum;
+
         fake1 = new Circle(30, pink).pos(50, 150, true);
         new Label({text: getRandomInt()}).center(fake1);
+        fake1.total = false;
 
         fake2 = new Circle(30, pink).pos(50, 250, true);
         new Label({text: getRandomInt()}).center(fake2);
+        fake1.total = false;
 
         answerArray = [answer, fake1, fake2];
 
@@ -175,6 +216,8 @@ var intervalID = interval(5000, function(){
 //pie.outline();
 }, null, true
 );
+
+
 
 // ****choose the answer*****
 //x want to arrow up and down between the three labels (answer, fake1, and fake2) 
@@ -208,8 +251,10 @@ frame.on("keydown", function(e){
       zog(selectedAnswer);
       loop(answerArray, function(answer){
       answer.color = pink;
-    })
-    answerArray[selectedAnswer%answerArray.length].color = red; //the variable selected in the array turns red. it goes up to the length of the array (3)
+    }) 
+    currentAnswer = answerArray[selectedAnswer%answerArray.length];
+    currentAnswer.color = red; //the variable selected in the array turns red. it goes up to the length of the array (3)
+
   }
   else if (e.keyCode == 40){   //down arrow
           if(selectedAnswer <2){
@@ -223,7 +268,8 @@ frame.on("keydown", function(e){
       loop(answerArray, function(answer){
       answer.color = pink;
     })
-  answerArray[selectedAnswer%answerArray.length].color = red; //the variable selected in the array turns red. it goes up to the length of the array (3)
+    currentAnswer = answerArray[selectedAnswer%answerArray.length];
+    currentAnswer.color = red; //the variable selected in the array turns red. it goes up to the length of the array (3)
   } 
 })
 
@@ -250,9 +296,10 @@ var score = new Label({
                   //       pie.removeFrom();
                   //       zog("removed"); }
                   if (pie.hitTestBounds(circ)) {
-                        pie.removeFrom();
-                        circ.removeFrom(); 
-                        stage.update();}
+                      splat.loc(piecontainer).spurt({time: 200});
+                      pie.removeFrom();
+                      circ.removeFrom(); 
+                      stage.update();}
                   else if (pie.done == true){
                         pie.removeFrom();
                         lives--;
@@ -279,6 +326,7 @@ var score = new Label({
                   
             }, true);
       }, stage);
+
 
 
 
