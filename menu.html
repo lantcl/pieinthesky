@@ -1,0 +1,138 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>ZIM Frame - Fit Template</title>
+
+<script src="https://d309knd7es5f10.cloudfront.net/createjs_1.1_min.js"></script>
+<script src="https://d309knd7es5f10.cloudfront.net/zim_9.2.1.js"></script>
+<script>
+
+
+
+var scaling = "fit";
+var width = 1024;
+var height = 768;
+var color = light;
+var outerColor = dark;
+var assets=["bgrd.jpg"];
+var path = "assets/";
+
+var frame = new Frame(scaling, width, height, color, outerColor, assets ,path);
+frame.on("ready", function() {
+    zog("ready from ZIM Frame");
+
+    var stage = frame.stage;
+    var stageW = frame.width;
+    var stageH = frame.height;
+
+
+    var landing = new Container().addTo();
+    var rect = new Rectangle(stageW,stageH, pink).center(landing);
+    var landbgrd = frame.asset("bgrd.jpg") .center(landing)
+
+    var game = new Container().addTo().bot();
+    var rect = new Rectangle(stageW,stageH, blue).center(game);
+
+    var instruction = new Container().addTo().pos(stageW);
+    var rect = new Rectangle(stageW,stageH, green).center(instruction);
+
+
+//ELEMENTS ON LANDING PAGE :
+        var instruct = new Button({
+                    label:"Instruction",
+                    backgroundColor:"black",
+                    rollBackgroundColor:"pink",
+                    corner:6
+                    }).center(landing);
+
+            instruct.on("click", function(){
+            landing.animate({
+                    props:{x:-stageW}
+                    });
+                    instruction.animate({
+                    props:{x:0}
+            })
+        });
+
+
+        var start = new Button({
+                    label:"Start",
+                    backgroundColor:"black",
+                    rollBackgroundColor:"pink",
+                    corner:15
+                    }).addTo(landing) .mov(410,500)
+
+                start.on("click", function(){
+                landing.animate({
+                    props:{x:-stageW}
+                    });
+                    instruction.animate({
+                    props:{x:-stageW}
+             });
+        });
+
+
+        var label = new Label({
+                text:"Pie In The Sky",
+                color:"white"
+                }).addTo(landing) .mov(400,100) .drag();
+
+
+
+//ELEMENTS ON INSTRUCTION PAGE :
+
+        var back = new Button({
+                            label:"Go Back",
+                            backgroundColor:"black",
+                            rollBackgroundColor:"pink",
+                            corner:15
+                            }).addTo(instruction) .mov(50,600)
+
+                        back.on("click", function(){
+                        instruction.animate({
+                            props:{x:stageW}
+                            });
+                            landing.animate({
+                                props:{x:0}
+                                });
+                                // instruction.animate({
+                                // props:{x:stageW}
+                         // });
+                });
+
+
+        var play = new Button({
+                            label:"Play",
+                            backgroundColor:"black",
+                            rollBackgroundColor:"pink",
+                            corner:15
+                            }).addTo(instruction) .mov(770,600)
+
+                        play.on("click", function(){
+                        instruction.animate({
+                            props:{x:-stageW}
+                            });
+                });
+
+
+        var label = new Label({
+                text:"Line one of Instruction",
+                color:"white"
+                }).addTo(instruction) .mov(350,100) .drag();
+
+
+            stage.update();
+
+}); // end of ready
+
+</script>
+
+<meta name="viewport" content="width=device-width, user-scalable=no" />
+
+</head>
+
+<body>
+<!-- canvas with id="myCanvas" is made by zim Frame -->
+</body>
+</html>
