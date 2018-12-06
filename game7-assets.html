@@ -465,7 +465,7 @@ var points = new Label({
       intervalID.clear();
       stopAnimate(); //instead of pauseanimate, clear animation?
       mc.enabled = false;
-      quit.enabled = false;
+      quit.removeFrom();
       frame.off("keydown", firingEvent);
       frame.color = green;
       // we can still up/down arrow through the numbers, should we bother taking this off?
