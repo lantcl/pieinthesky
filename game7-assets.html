@@ -126,28 +126,29 @@ frame.on("ready", function() {
 
                         play.on("click", function(){
                         instruction.animate({
-                            props:{x:-stageW}
+                            props:{x:-stageW},
+                            call: startGame()
                             });
                 });
 
 
 
-        var quit = new Button({
-                            label:"Quit",
-                            backgroundColor:"black",
-                            rollBackgroundColor:"pink",
-                            corner:15
-                            }).addTo(game) .mov(770,600)
+        // var quit = new Button({
+        //                     label:"Quit",
+        //                     backgroundColor:"black",
+        //                     rollBackgroundColor:"pink",
+        //                     corner:15
+        //                     }).addTo(game) .mov(770,600)
 
-                        quit.on("click", function(){
-                        game.animate({
-                            props:{x:stageW}
-                            });
+        //                 quit.on("click", function(){
+        //                 game.animate({
+        //                     props:{x:stageW}
+        //                     });
 
-                        landing.animate({
-                                props:{x:0}
-                                });
-                });
+        //                 landing.animate({
+        //                         props:{x:0}
+        //                         });
+        //         });
 
 
 
@@ -160,6 +161,9 @@ frame.on("ready", function() {
 
 
 function startGame(){
+
+    frame.color = blue;
+
 
 //**************cannon**********************
 
@@ -203,15 +207,15 @@ function startGame(){
 
 //**************pies**********************
 
-var rectangle = new Container(stageW-50, stageH).center();
+    var rectangle = new Container(stageW-50, stageH).center();
 
 //var rectangle = new Rectangle(stageW-50, stageH).center(holder);
 
-var colors = [pink, green, "blue", purple, yellow, red, orange]; 
+    var colors = [pink, green, "blue", purple, yellow, red, orange]; 
 
 //if i need to make a container to put the pies in?? so they dont go to the edge
 
-var pie;
+    var pie;
 
 
 var answer;
@@ -221,7 +225,9 @@ var answerArray;
 var splat;
 var piecontainer;
 var currentAnswer;
-
+var end;
+var clear;
+var answerContainer;
         //*****Exploding pies*****
 
   var blobdata = [
@@ -265,11 +271,7 @@ var intervalID = interval(5000, function(){
       }).center(piecontainer);
      // .reg(1)
 
-
-
 //******question positions*******     
-
-
 
 
 //******questions*******     
@@ -293,7 +295,7 @@ var intervalID = interval(5000, function(){
         answerPositions = shuffle([350, 450, 550]);
         var answerOrder = {num350:0, num450:1, num550:2}
       
-        var answerContainer = new Container(stageW, stageH).addTo();
+        answerContainer = new Container(stageW, stageH).addTo();
 
         answer = new Circle(30, pink).pos(50, answerPositions[0], true, false, answerContainer);
         new Label({text: sum}).center(answer);
@@ -311,28 +313,22 @@ var intervalID = interval(5000, function(){
         new Label({text: getRandomInt()+sum}).center(fake2);
         fake1.total = false;
         answerArray[answerOrder["num"+answerPositions[2]]] = fake2
-        
-        
-        
-        
     }
-//can we have the three labels randomize it's location (bw the 3 spots)
-//i think the color = red, is on the circle. can 
+
     question();
     
     piecontainer.animate({ 
             props:{
-            y:727
+              y:727
             },
             time:5000,
             ease:"linear",
             call:function(target){
-                  target.done=true;
+              target.done=true;
             }
-
       });
 //pie.outline();
-}, null, true
+  }, null, true
 );
 
 
@@ -346,8 +342,6 @@ frame.on("keydown", function(e){
           }
           else{selectedAnswer = 0}
             
-      // selectedAnswer < answerArray.length //does this do anything?
-      // zog(e.keyCode);
       zog(selectedAnswer);
       loop(answerArray, function(answer){
       answer.color = pink;
@@ -422,7 +416,7 @@ var points = new Label({
                       intervalID.pause(false, true);
                       stage.update();
                       if (points.text == 15){
-                      endgame();
+                      wingame();
                     }
                   }
                   else if (pie.done == true){
@@ -431,11 +425,7 @@ var points = new Label({
                         lives--;
                         score.text = lives;
                         if (lives == 0){
-                            intervalID.clear();
-                            pauseAnimate();
-                            mc.enabled = false;
-                            frame.color = red;
-                            frame.off("keydown", firingEvent);
+                            losegame();
                             stage.update();
 
                         }
@@ -452,14 +442,33 @@ var points = new Label({
                   
             }, true);
       }, stage);
+// };
+
+//QUIT GAME*taken from above*******
+ var quit = new Button({
+      label:"End Game",
+      backgroundColor:"black",
+      rollBackgroundColor:"pink",
+      corner:15
+      }).addTo(game).mov(770,50) //moved position
+
+  quit.on("click", function(){
+  game.animate({
+      // props:{x:stageW},
+      call: losegame() //added call
+      });
+});
 
 
-    function endgame(){
+//WIN / LOSE THE GAME*********
+    function wingame(){
       intervalID.clear();
-      pauseAnimate();
+      stopAnimate(); //instead of pauseanimate, clear animation?
       mc.enabled = false;
+      quit.enabled = false;
       frame.off("keydown", firingEvent);
       frame.color = green;
+      // we can still up/down arrow through the numbers, should we bother taking this off?
       
       frame.asset("win.wav").play();
       var end = new Label({
@@ -475,8 +484,53 @@ var points = new Label({
         color:frame.light,
         corner:0
       }).center().mov(null, 50);
+
+
+    again.on("click", function(){
+      end.removeFrom();
+      again.removeFrom();
+      call:startGame()
+      // change bg back to blue, clear 'you won' and 'play again' buttons
+    })
       stage.update(); 
     }
+
+    function losegame(){
+      piecontainer.removeFrom();
+      answerContainer.removeFrom();
+      quit.removeFrom();
+      intervalID.clear();
+      stopAnimate();
+      mc.enabled = false;
+      //answerContainer.enabled = false;
+      // is there a way, when this function happens, we make the quit button disappear?
+      frame.off("keydown", firingEvent);
+      frame.color = red;
+      
+      // frame.asset("win.wav").play(); -> need a GameOver.wav
+      var end = new Label({
+        text: "Game Over",
+        paddingVertical: 10,
+        paddingHorizontal: 40,
+        color:orange
+      }).center().mov(null, -50);;
+
+      var again = new Button({
+        label: "play again",
+        backgroundColor: orange,
+        color:frame.light,
+        corner:0
+      }).center().mov(null, 50);
+    
+    again.on("click", function(){
+      end.removeFrom();
+      again.removeFrom();
+      call:startGame()
+    })
+      stage.update();
+    }
+
+
  stage.update();
 }
     // again.on("click", function(){
