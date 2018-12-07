@@ -1,0 +1,581 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Pie In The Sky!</title>
+
+<!-- Welcome to ZIM at https://zimjs.com - Code Creativity!                       -->
+<!-- ZIM runs on the HTML Canvas powered by JavaScript and CreateJS https://createjs.com -->
+<!-- Founded by Inventor Dan Zen - http://danzen.com - Canadian New Media Award Winner  -->
+<!-- ZIM is free to use. You can donate to help improve ZIM at http://zimjs.com/donate  -->
+
+<script src="https://d309knd7es5f10.cloudfront.net/createjs_1.1_min.js"></script>
+<script src="https://d309knd7es5f10.cloudfront.net/zim_9.2.1.js"></script>
+<!-- use zimjs.com/distill for minified individual functions! -->
+
+<script>
+
+// SCALING OPTIONS
+// scaling can have values as follows with full being the default
+// "fit"  sets canvas and stage to dimensions and scales to fit inside window size
+// "outside"  sets canvas and stage to dimensions and scales to fit outside window size
+// "full" sets stage to window size with no scaling
+// "tagID"  add canvas to HTML tag of ID - set to dimensions if provided - no scaling
+
+var scaling = "fit"; // this will resize to fit inside the screen dimensions
+var width = 1024;
+var height = 768;
+var color = blue; // ZIM colors like green, blue, pink, faint, clear, etc. available globally
+var outerColor = dark; // any HTML colors like "violet", "#333", etc. fine to use
+var assets = ["pie.png", "cannon.png", "bg.wav", "cannonshot.wav", "misspie.wav", "explode.wav", "win.wav", "background-03.png", "pie shatter-01.png", "pie shatter-02.png", "pie shatter-03.png", "pie shatter-04.png"];
+var path = "assets/";
+var frame = new Frame(scaling, width, height, color, outerColor, assets, path);
+
+//var frame = new Frame(scaling, width, height, color, outerColor);
+frame.on("ready", function() {
+    zog("ready from ZIM Frame"); // logs in console (F12 - choose console)
+
+    var stage = frame.stage;
+    var stageW = frame.width;
+    var stageH = frame.height;
+
+    // see http://zimjs.com/learn.html for video and code tutorials
+    // see http://zimjs.com/docs.html for documentation
+    // see http://zimjs.com/bits.html for 64 Interactive Media techniques
+
+
+	// stage.on("stagemousedown", function (e){ 
+ //    	var sprite3 = new Sprite(frame.asset("pie shatter-03.png"), 6, 5, 29)
+ //            .centerReg()
+ //            .loc(e.stageX, e.stageY)
+ //            .run({time:500});
+ //    });
+	
+	// stage.on("stagemousedown", function (e){ 
+ //    	var sprite2 = new Sprite(frame.asset("pie shatter-02.png"), 6, 5, 29)
+ //            .centerReg()
+ //            .loc(e.stageX, e.stageY)
+ //            .run({time:500});
+ //    });
+
+    	// var sprite2 = new Sprite(frame.asset("pie shatter-01.png"), 6, 5, 29)
+     //        .center()
+     //        .pauseRun(true);
+
+     //    stage.on("stagemousedown", function (e){ 
+     //        sprite2.run({time:500})
+     //        });
+
+    	// var sprite2 = new Sprite(frame.asset("pie shatter-04.png"), 6, 5, 29)
+     //        .centerReg()
+     //        .loc(e.stageX, e.stageY)
+     //        .run({time:500});
+
+//MENU
+	
+    var game = new Container().addTo().bot();
+    var landing = new Container().addTo();
+    var rect = new Rectangle(stageW,stageH, pink).center(landing);
+    var landbgrd = frame.asset("bgrd.jpg") .center(landing)
+
+    
+    // var rect1 = new Rectangle(stageW,stageH, blue).center(game);
+    
+    var instruction = new Container().addTo().pos(stageW);
+    var rect2 = new Rectangle(stageW,stageH, green).center(instruction);
+
+//ELEMENTS ON LANDING PAGE :
+        var instruct = new Button({
+                    label:"Instruction",
+                    backgroundColor:"black",
+                    rollBackgroundColor:"pink",
+                    corner:6
+                    }).center(landing);
+
+            instruct.on("click", function(){
+            landing.animate({
+                    props:{x:-stageW}
+                    });
+                    instruction.animate({
+                    props:{x:0}
+            })
+        });
+
+
+        var start = new Button({
+                    label:"Start",
+                    backgroundColor:"black",
+                    rollBackgroundColor:"pink",
+                    corner:15
+                    }).addTo(landing) .mov(410,500)
+
+                start.on("click", function(){
+                landing.animate({
+                    props:{x:-stageW}
+                    });
+                    instruction.animate({
+                    props:{x:-stageW},
+                    call: startGame()
+             });
+        });
+
+
+        var label = new Label({
+                text:"Pie In The Sky",
+                color:"white"
+                }).addTo(landing) .mov(400,100) .drag();
+
+
+
+//ELEMENTS ON INSTRUCTION PAGE :
+
+        var back = new Button({
+                            label:"Go Back",
+                            backgroundColor:"black",
+                            rollBackgroundColor:"pink",
+                            corner:15
+                            }).addTo(instruction) .mov(50,600)
+
+                        back.on("click", function(){
+                        instruction.animate({
+                            props:{x:stageW}
+                            });
+                            landing.animate({
+                                props:{x:0}
+                                });
+                });
+
+
+        var play = new Button({
+                            label:"Play",
+                            backgroundColor:"black",
+                            rollBackgroundColor:"pink",
+                            corner:15
+                            }).addTo(instruction) .mov(770,600)
+
+                        play.on("click", function(){
+                        instruction.animate({
+                            props:{x:-stageW},
+                            call: startGame()
+                            });
+                });
+
+
+
+        // var quit = new Button({
+        //                     label:"Quit",
+        //                     backgroundColor:"black",
+        //                     rollBackgroundColor:"pink",
+        //                     corner:15
+        //                     }).addTo(game) .mov(770,600)
+
+        //                 quit.on("click", function(){
+        //                 game.animate({
+        //                     props:{x:stageW}
+        //                     });
+
+        //                 landing.animate({
+        //                         props:{x:0}
+        //                         });
+        //         });
+
+
+
+        var label = new Label({
+                text:"Line one of Instruction",
+                color:"white"
+                }).addTo(instruction) .mov(350,100) .drag();
+
+
+
+
+function startGame(){
+
+    frame.color = blue;
+
+
+//**************cannon**********************
+
+    var dock = new Container(0,0).centerReg();
+    var deck = frame.asset("cannon.png").sca(.2).addTo(dock).centerReg();
+    dock.pos(stageW/2, stageH-deck.height/2);
+
+
+    var mc = new MotionController({
+        target: dock, 
+        type: "keydown",
+        diagonal: false,
+        axis: "horizontal",
+        speed: 15,
+        boundary: new Boundary(100, 0, stageW-200, stageH)
+    }); 
+
+    var circ = new Circle(20, black);
+    var shine = new Circle(4, white).alp(.3).addTo(circ).mov(-5, -5);
+
+    function fire(){            
+            circ.loc(dock.x, 650);
+            circ.animate({
+                props: {y:-circ.radius},
+                time: 1000,
+                ease: "linear",
+                call: function(target){
+                    target.removeFrom();
+                    }
+                }).bot();
+    }
+
+    var firingEvent = frame.on("keydown", function(e){  
+        if (e.keyCode == 32){     //space bar
+            fire();
+            frame.asset("cannonshot.wav").play();
+        }
+    });
+
+
+
+//**************pies**********************
+
+    var rectangle = new Container(stageW-50, stageH).center();
+
+//var rectangle = new Rectangle(stageW-50, stageH).center(holder);
+
+    var colors = [pink, green, "blue", purple, yellow, red, orange]; 
+
+//if i need to make a container to put the pies in?? so they dont go to the edge
+
+    var pie;
+
+
+var answer;
+var fake1;
+var fake2; 
+var answerArray;
+var splat;
+var piecontainer;
+var currentAnswer;
+var end;
+var clear;
+var answerContainer;
+        //*****Exploding pies*****
+
+  var blobdata = [
+            [[4.8,-63.1,0,0,-23.4,-20.4,29.6,25.7],[-9.8,2.4,0,0,-4,-25.8,3.7,23.7],[-32.9,52.7,0,0,46,-17.6,-46.7,17.9],[-81.6,-36.1,0,0,0,50,0,-50]],
+            [[-3.2,-86.3,0,0,-23.4,-20.4,29.6,25.7],[-19.4,-24,0,0,23.4,11.5,-25.1,-12.4],[-73.6,-59.3,0,0,0,50,0,-50]],
+            [[19.2,-59.9,0,0,-18.7,-20.3,14.5,15.8],[22.3,-5.6,0,0,0,-50,0,50],[8,56.7,0,0,24.4,-16.8,-41.1,28.4],[-27.1,-14.4,0,0,-20.8,43.6,21.6,-45.1]],
+            [[0,12.2,0,0,-50,0,50,0],[74.4,46.5,0,0,0,-50,0,50],[0,100,0,0,16.3,-5.6,-47.3,16.2],[-96.8,16.8,0,0,0,50,0,-50]],
+           [[-5.9,-46.7,0,0,-27.1,-3,25.3,2.8],[45.7,3.9,0,0,-2,-32.2,1.7,28.2],[-1,67.4,0,0,23.3,0,-28.3,0],[-71.4,2,0,0,0,50,0,-50]] 
+    ]
+    
+  var blobs = [];
+
+  for(var i=0; i<blobdata.length; i++){
+      blobs.push(new Blob({points: blobdata[i], lockControls: true, showControls: false}));
+        //zog(blob);
+    } 
+
+
+var intervalID = interval(5000, function(){
+      //frame.asset("line.mp3").play();
+    piecontainer = new Container().pos(rand(stageW-150), 0, false, false, rectangle);
+      splat = new Emitter({
+            obj: blobs,
+            interval: 100,
+            num: 7,
+            force: 12,
+            fade: false,
+            gravity: 20,
+            cache: true,
+            startPaused: true, 
+            random: {
+                color:["crimson", "red"],
+                rotation:{min:0, max:360},
+                }
+        }).centerReg().sca(.3);
+
+    var pie = new Rectangle({
+            width:100,
+            height:50,
+            color:shuffle(colors)[0]
+      }).center(piecontainer);
+     // .reg(1)
+
+//******question positions*******     
+
+
+//******questions*******     
+
+    function question(){
+      box = new Rectangle(200, 60, pink).center(piecontainer).mov({y: -60});
+
+      function getRandomInt(min, max) {
+        min = Math.ceil(1);
+        max = Math.floor(10);
+        return Math.floor(Math.random() *(max - min + 1)) + min;
+      }
+
+        var a = getRandomInt();
+        var b = getRandomInt();
+        var sum = a + b;
+        new Label({text: a +" + "+ b +" = ?"}).center(box);
+        
+        answerArray = [];
+
+        answerPositions = shuffle([350, 450, 550]);
+        var answerOrder = {num350:0, num450:1, num550:2}
+      
+        answerContainer = new Container(stageW, stageH).addTo();
+
+        answer = new Circle(30, pink).pos(50, answerPositions[0], true, false, answerContainer);
+        new Label({text: sum}).center(answer);
+        answerArray[answerOrder["num"+answerPositions[0]]] = answer
+
+        answer.total = sum;
+        piecontainer.total = sum;
+
+        fake1 = new Circle(30, pink).pos(50, answerPositions[1], true, false, answerContainer);
+        new Label({text: getRandomInt()+sum}).center(fake1);
+        fake1.total = false;
+        answerArray[answerOrder["num"+answerPositions[1]]] = fake1
+
+        fake2 = new Circle(30, pink).pos(50, answerPositions[2], true, false, answerContainer);
+        new Label({text: getRandomInt()+sum}).center(fake2);
+        fake1.total = false;
+        answerArray[answerOrder["num"+answerPositions[2]]] = fake2
+    }
+
+    question();
+    
+    piecontainer.animate({ 
+            props:{
+              y:727
+            },
+            time:5000,
+            ease:"linear",
+            call:function(target){
+              target.done=true;
+            }
+      });
+//pie.outline();
+  }, null, true
+);
+
+
+selectedAnswer = 0
+
+//i was able to get it the chosen circle color to go up and down, but for some reason, doesn't start at 0 (The first var)
+frame.on("keydown", function(e){
+  if (e.keyCode == 38){     //up arrow
+          if(selectedAnswer > 0){
+            selectedAnswer --;
+          }
+          else{selectedAnswer = 0}
+            
+      zog(selectedAnswer);
+      loop(answerArray, function(answer){
+      answer.color = pink;
+    }) 
+    currentAnswer = answerArray[selectedAnswer%answerArray.length];
+    currentAnswer.color = red; //the variable selected in the array turns red. it goes up to the length of the array (3)
+
+  }
+  else if (e.keyCode == 40){   //down arrow
+      if(selectedAnswer <2){
+        selectedAnswer ++;
+      }
+        else{selectedAnswer = 2
+      }
+
+      // selectedAnswer < answerArray.length
+      // zog(e.keyCode);
+      zog(selectedAnswer);
+      loop(answerArray, function(answer){
+        answer.color = pink;
+      })
+      currentAnswer = answerArray[selectedAnswer%answerArray.length];
+      currentAnswer.color = red; //the variable selected in the array turns red. it goes up to the length of the array (3)
+  } 
+})
+
+
+
+
+//*****lives*****
+var lives = 3;
+var score = new Label({
+    text: lives,
+    // backing:new Rectangle(100,60,frame.grey),
+    backgroundColor: tin,
+    paddingVertical: 10,
+    paddingHorizontal: 40,
+    color:frame.light,
+    size:50
+}).addTo().pos(40, 650); 
+
+//*****points*****
+
+var pp = 0;
+var points = new Label({
+    text: pp,
+    // backing:new Rectangle(100,60,frame.grey),
+    backgroundColor: pink,
+    paddingVertical: 10,
+    paddingHorizontal: 40,
+    color:frame.light,
+    size:50
+}).addTo().pos(40,30)
+
+
+      Ticker.add(function(){
+            rectangle.loop(function(pie){
+                  // if (pie.done == true) {
+                  //       pie.removeFrom();
+                  //       zog("removed"); }
+                  if (pie.hitTestBounds(circ)) {
+                      frame.asset("explode.wav").play();
+                      splat.loc(piecontainer).spurt({time: 200});
+                      pie.removeFrom();
+                      circ.removeFrom(); 
+                      fake1.removeFrom();
+                      fake2.removeFrom();
+                      answer.removeFrom();
+                      pp++;
+                      points.text = pp;
+                      intervalID.pause(true);
+                      intervalID.pause(false, true);
+                      stage.update();
+                      if (points.text == 15){
+                      wingame();
+                    }
+                  }
+                  else if (pie.done == true){
+                    frame.asset("misspie.wav").play();
+                        pie.removeFrom();
+                        lives--;
+                        score.text = lives;
+                        if (lives == 0){
+                            losegame();
+                            stage.update();
+
+                        }
+                  }
+                  //             rect.removeFrom();
+                  //            // frame.asset("hit.mp3").play();
+                  //             //change score
+                  //             intervalID.clear();
+                  //             stopAnimate();
+                  //             controller.enabled = false;
+
+                  //             frame.color = red;
+                  //             stage.update();
+                  
+            }, true);
+      }, stage);
+// };
+
+//QUIT GAME*taken from above*******
+ var quit = new Button({
+      label:"End Game",
+      backgroundColor:"black",
+      rollBackgroundColor:"pink",
+      corner:15
+      }).addTo(game).mov(770,50) //moved position
+
+  quit.on("click", function(){
+  game.animate({
+      // props:{x:stageW},
+      call: losegame() //added call
+      });
+});
+
+
+//WIN / LOSE THE GAME*********
+    function wingame(){
+      intervalID.clear();
+      stopAnimate(); //instead of pauseanimate, clear animation?
+      mc.enabled = false;
+      quit.removeFrom();
+      frame.off("keydown", firingEvent);
+      frame.color = green;
+      // we can still up/down arrow through the numbers, should we bother taking this off?
+      
+      frame.asset("win.wav").play();
+      var end = new Label({
+        text: "You won!",
+        paddingVertical: 10,
+        paddingHorizontal: 40,
+        color:orange
+      }).center().mov(null, -50);;
+
+      var again = new Button({
+        label: "play again",
+        backgroundColor: orange,
+        color:frame.light,
+        corner:0
+      }).center().mov(null, 50);
+
+
+    again.on("click", function(){
+      end.removeFrom();
+      again.removeFrom();
+      call:startGame()
+      // change bg back to blue, clear 'you won' and 'play again' buttons
+    })
+      stage.update(); 
+    }
+
+    function losegame(){
+      piecontainer.removeFrom();
+      answerContainer.removeFrom();
+      quit.removeFrom();
+      intervalID.clear();
+      stopAnimate();
+      mc.enabled = false;
+      //answerContainer.enabled = false;
+      // is there a way, when this function happens, we make the quit button disappear?
+      frame.off("keydown", firingEvent);
+      frame.color = red;
+      
+      // frame.asset("win.wav").play(); -> need a GameOver.wav
+      var end = new Label({
+        text: "Game Over",
+        paddingVertical: 10,
+        paddingHorizontal: 40,
+        color:orange
+      }).center().mov(null, -50);;
+
+      var again = new Button({
+        label: "play again",
+        backgroundColor: orange,
+        color:frame.light,
+        corner:0
+      }).center().mov(null, 50);
+    
+    again.on("click", function(){
+      end.removeFrom();
+      again.removeFrom();
+      call:startGame()
+    })
+      stage.update();
+    }
+
+	
+ 	stage.update();
+}
+	
+	var bg = frame.asset("background-03.png").sca(.5).center().bot();
+  	
+  	stage.update(); 
+
+}); // end of ready
+
+</script>
+
+<meta name="viewport" content="width=device-width, user-scalable=no" />
+
+</head>
+
+<body>
+<!-- canvas with id="myCanvas" is made by zim Frame -->
+</body>
+</html>
