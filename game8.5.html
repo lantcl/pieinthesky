@@ -58,7 +58,6 @@ var clear;
 var answerContainer;
 var parachute;
 
-var bgmusic = frame.asset("bg.wav");
 
 // MENU
 	
@@ -73,11 +72,12 @@ var bgmusic = frame.asset("bg.wav");
 
 // ELEMENTS ON LANDING PAGE :
         var instruct = new Button({
-                    label:"Instruction",
-                    backgroundColor:"black",
-                    rollBackgroundColor:"pink",
-                    corner:6
-                    }).center(landing);
+                    label:new Label({text:"Instruction",color:"white"}),
+                    backgroundColor:"lightSKYBLUE",
+                    rollBackgroundColor:"dodgerBLUE",
+                    corner:15,
+                    width:250
+                    }).center(landing).loc(385,450);
 
             instruct.on("click", function(){
             landing.animate({
@@ -91,13 +91,12 @@ var bgmusic = frame.asset("bg.wav");
 
         var start = new Button({
                     label:"Start",
-                    backgroundColor:"black",
-                    rollBackgroundColor:"pink",
+                    backgroundColor:"DEEPSKYBLUE",
+                    rollBackgroundColor:"dodgerbLUE",
                     corner:15
-                    }).addTo(landing).mov(410,500)
+                    }).center(landing);
 
                 start.on("click", function(){
-                bgmusic.play({volume:.5, loop:-1});
                 landing.animate({
                     props:{x:-stageW}
                     });
@@ -111,7 +110,7 @@ var bgmusic = frame.asset("bg.wav");
         var label = new Label({
                 text:"Pie In The Sky",
                 color:"white"
-                }).addTo(landing).mov(400,100).drag();
+                }).addTo(landing) .mov(400,100) .drag();
 
 
 
@@ -119,10 +118,10 @@ var bgmusic = frame.asset("bg.wav");
 
         var back = new Button({
                             label:"Go Back",
-                            backgroundColor:"black",
-                            rollBackgroundColor:"pink",
+                            backgroundColor:"rebeccapurple",
+                            rollBackgroundColor:"mediumpurple",
                             corner:15
-                            }).addTo(instruction).mov(50,600)
+                            }).addTo(instruction) .mov(50,600)
 
                         back.on("click", function(){
                         instruction.animate({
@@ -136,10 +135,10 @@ var bgmusic = frame.asset("bg.wav");
 
         var play = new Button({
                             label:"Play",
-                            backgroundColor:"black",
-                            rollBackgroundColor:"pink",
+                            backgroundColor:"DEEPSKYBLUE",
+                            rollBackgroundColor:"dodgerblue",
                             corner:15
-                            }).addTo(instruction).mov(770,600)
+                            }).addTo(instruction) .mov(770,600)
 
                         play.on("click", function(){
                         instruction.animate({
@@ -152,8 +151,7 @@ var bgmusic = frame.asset("bg.wav");
         var label = new Label({
                 text:"Line one of Instruction",
                 color:"white"
-                }).addTo(instruction).mov(350,100).drag();
-
+                }).addTo(instruction) .mov(350,100) .drag();
 
 
 
@@ -275,7 +273,7 @@ var intervalID = interval(5000, function(){
     function question(){
       parachute = frame.asset("parachute.png").sca(.7).center(piecontainer).mov({y: -111});
       
-      box = new Rectangle(100, 20, "ivory").center(piecontainer).mov({y: -108});
+      box = new Rectangle(0, 0, "ivory").center(piecontainer).mov({y: -108});
       function getRandomInt(min, max) {
         min = Math.ceil(1);
         max = Math.floor(10);
@@ -294,19 +292,19 @@ var intervalID = interval(5000, function(){
       
         answerContainer = new Container(stageW, stageH).addTo();
 
-        answer = new Circle(30, pink).pos(50, answerPositions[0], true, false, answerContainer);
+        answer = new Circle(30, "DODGERBLUE").pos(50, answerPositions[0], true, false, answerContainer);
         new Label({color:white, text: sum}).center(answer);
         answerArray[answerOrder["num"+answerPositions[0]]] = answer
 
         answer.total = sum;
         piecontainer.total = sum;
 
-        fake1 = new Circle(30, pink).pos(50, answerPositions[1], true, false, answerContainer);
+        fake1 = new Circle(30, "DODGERBLUE").pos(50, answerPositions[1], true, false, answerContainer);
         new Label({color:white, text: getRandomInt()+sum}).center(fake1);
         fake1.total = false;
         answerArray[answerOrder["num"+answerPositions[1]]] = fake1
 
-        fake2 = new Circle(30, pink).pos(50, answerPositions[2], true, false, answerContainer);
+        fake2 = new Circle(30, "DODGERBLUE").pos(50, answerPositions[2], true, false, answerContainer);
         new Label({color:white, text: getRandomInt()+sum}).center(fake2);
         fake1.total = false;
         answerArray[answerOrder["num"+answerPositions[2]]] = fake2
@@ -340,7 +338,7 @@ frame.on("keydown", function(e){
           else{selectedAnswer = 0}
 
       loop(answerArray, function(answer){
-      answer.color = pink;
+      answer.color = "DODGERBLUE";
     }) 
     currentAnswer = answerArray[selectedAnswer%answerArray.length];
     currentAnswer.color = "dimgray"; //the variable selected in the array turns red. it goes up to the length of the array (3)
@@ -356,7 +354,7 @@ frame.on("keydown", function(e){
       // selectedAnswer < answerArray.length
       // zog(e.keyCode);
       loop(answerArray, function(answer){
-        answer.color = pink;
+        answer.color = "DODGERBLUE";
       })
       currentAnswer = answerArray[selectedAnswer%answerArray.length];
       currentAnswer.color = "dimgray"; //the variable selected in the array turns red. it goes up to the length of the array (3)
@@ -371,11 +369,12 @@ var lives = 3;
 var score = new Label({
     text: lives,
     // backing:new Rectangle(100,60,frame.grey),
-    backgroundColor: tin,
+    backgroundColor: "rebeccapurple",
     paddingVertical: 10,
     paddingHorizontal: 40,
-    color:frame.light,
-    size:50
+    color:white,
+    size:50,
+    corner:15
 }).addTo().pos(40, 650); 
 
 //*****points*****
@@ -384,11 +383,12 @@ var pp = 0;
 var points = new Label({
     text: pp,
     // backing:new Rectangle(100,60,frame.grey),
-    backgroundColor: pink,
+    backgroundColor: "dodgerblue",
     paddingVertical: 10,
     paddingHorizontal: 40,
-    color:frame.light,
-    size:50
+    color:white,
+    size:50,
+    corner:15
 }).addTo().pos(40,30)
 
 
@@ -446,7 +446,7 @@ var points = new Label({
  var quit = new Button({
       label:"End Game",
       backgroundColor:"black",
-      rollBackgroundColor:"pink",
+      rollBackgroundColor:"dodgerblue",
       corner:15
       }).addTo(game).mov(770,50) //moved position
 
@@ -471,16 +471,17 @@ var points = new Label({
       frame.asset("win.wav").play();
       var end = new Label({
         text: "You won!",
+        size: 60,
         paddingVertical: 10,
         paddingHorizontal: 40,
-        color:orange
+        color:black
       }).center().mov(null, -50);;
 
       var again = new Button({
-        label: "play again",
-        backgroundColor: orange,
-        color:frame.light,
-        corner:0
+        label: "Play Again",
+        backgroundColor:"DEEPSKYBLUE",
+        rollBackgroundColor:"dodgerbLUE",
+        corner:15
       }).center().mov(null, 50);
 
 
@@ -503,21 +504,22 @@ var points = new Label({
       //answerContainer.enabled = false;
       // is there a way, when this function happens, we make the quit button disappear?
       frame.off("keydown", firingEvent);
-      frame.color = red;
+      // frame.color = red;
       
       // frame.asset("win.wav").play(); -> need a GameOver.wav
       var end = new Label({
         text: "Game Over",
+        size: 60,
         paddingVertical: 10,
         paddingHorizontal: 40,
-        color:orange
+        color:black
       }).center().mov(null, -50);;
 
       var again = new Button({
-        label: "play again",
-        backgroundColor: orange,
-        color:frame.light,
-        corner:0
+        label: "Play Again",
+        backgroundColor:"DEEPSKYBLUE",
+        rollBackgroundColor:"dodgerbLUE",
+        corner:15
       }).center().mov(null, 50);
     
     again.on("click", function(){
