@@ -29,7 +29,7 @@ var color = blue; // ZIM colors like green, blue, pink, faint, clear, etc. avail
 var outerColor = dark; // any HTML colors like "violet", "#333", etc. fine to use
 var assets = ["pie.png", "cannon.png", "bg.wav", "cannonshot.wav", "misspie.wav", "explode.wav", "win.wav", "main-bgrd.png", "pieshatter-01.png", "pieshatter-02.png", "pieshatter-03.png", "pieshatter-04.png", "parachute.png", "game-bgrd.png", "text-instruct-final.png", "won.png", "gameover.png"];
 var path = "assets/";
-var frame = new Frame(scaling, width, height, color, outerColor, assets, path);
+var frame = new Frame(scaling, width, height, color, outerColor, assets, path, new Waiter({corner: 15, backgroundColor:blue}));
 
 //var frame = new Frame(scaling, width, height, color, outerColor);
 frame.on("ready", function() {
@@ -43,6 +43,9 @@ frame.on("ready", function() {
     // see http://zimjs.com/docs.html for documentation
     // see http://zimjs.com/bits.html for 64 Interactive Media techniques
 
+// ******************** VARIABLE DECLARATIONS **********************************
+
+var bgmusic = frame.asset("bg.wav");
 var pie;
 var sprite2;
 
@@ -59,7 +62,7 @@ var answerContainer;
 var parachute;
 
 
-// MENU
+// ******************** MENU **********************************
 	
     var game = new Container().addTo().bot();
     var landing = new Container().addTo();
@@ -76,11 +79,13 @@ var parachute;
 
   function makeIntro(){
         var instruct = new Button({
-                    label:new Label({text:"Instruction",color:"lightSKYBLUE"}),
+                    label:new Label({text:"Instructions",color:"deepskyblue"}),
                     backgroundColor:"white",
-                    rollBackgroundColor:"dodgerBLUE",
+                    rollBackgroundColor:"rebeccapurple",
                     corner:15,
-                    width:250
+                    width:250,
+                    gloss: .1,
+                    shadowColor: -1
                     }).center(landing).loc(385,450);
 
             instruct.on("click", function(){
@@ -94,14 +99,18 @@ var parachute;
 
 
         var start = new Button({
-                    label:"Start",
-                    backgroundColor:"DEEPSKYBLUE",
+                    label:"Play",
+                    backgroundColor:"deepskyblue",
                     rollBackgroundColor:"dodgerbLUE",
-                    corner:15
+                    corner:15,
+                    width:250,
+                    gloss: .1,
+                    shadowColor: -1
                     }).center(landing);
 
                 start.on("click", function(){
-                landing.animate({
+                  bgmusic.play({volume:.5, loop:-1});
+                  landing.animate({
                     props:{x:-stageW}
                     });
                     instruction.animate({
@@ -117,11 +126,14 @@ var parachute;
 //ELEMENTS ON INSTRUCTION PAGE :
 
         var back = new Button({
-                            label:"Go Back",
+                            label:"Back",
                             backgroundColor:"rebeccapurple",
-                            rollBackgroundColor:"mediumpurple",
-                            corner:15
-                            }).addTo(instruction) .mov(50,600)
+                            rollBackgroundColor:"indigo",
+                            width: 150,
+                            corner:15,
+                            gloss: .1,
+                            shadowColor: -1
+                            }).addTo(instruction).pos(70,600)
 
                         back.on("click", function(){
                         instruction.animate({
@@ -135,12 +147,16 @@ var parachute;
 
         var play = new Button({
                             label:"Play",
-                            backgroundColor:"DEEPSKYBLUE",
+                            backgroundColor:"deepskyblue",
                             rollBackgroundColor:"dodgerblue",
-                            corner:15
-                            }).addTo(instruction) .mov(770,600)
+                            width: 150,
+                            corner:15,
+                            gloss: .1,
+                            shadowColor: -1
+                            }).addTo(instruction).pos(70,600, true)
 
                         play.on("click", function(){
+                        bgmusic.play({volume:.5, loop:-1});
                         instruction.animate({
                             props:{x:-stageW},
                             call: startGame()
@@ -233,7 +249,7 @@ function startGame(){
 
 
 
-var intervalID = interval(5000, function(){
+var intervalID = interval(6000, function(){
       //frame.asset("line.mp3").play();
     piecontainer = new Container().pos(rand(stageW-150), 0, false, false, rectangle);
       splat = new Emitter({
@@ -246,7 +262,7 @@ var intervalID = interval(5000, function(){
             cache: true,
             startPaused: true, 
             random: {
-                color:["crimson", "red"],
+                color:["crimson", "chocolate"],
                 rotation:{min:0, max:360},
                 }
         }).centerReg().sca(.3);
@@ -289,7 +305,7 @@ var intervalID = interval(5000, function(){
       
         answerContainer = new Container(stageW, stageH).addTo();
 
-        answer = new Circle(30, "DODGERBLUE").pos(50, answerPositions[0], true, false, answerContainer);
+        answer = new Circle(30, "dodgerblue").pos(50, answerPositions[0], true, false, answerContainer);
         new Label({color:white, text: sum}).center(answer);
         answerArray[answerOrder["num"+answerPositions[0]]] = answer
 
@@ -298,12 +314,12 @@ var intervalID = interval(5000, function(){
         answer.total = sum;
         piecontainer.total = sum;
 
-        fake1 = new Circle(30, "DODGERBLUE").pos(50, answerPositions[1], true, false, answerContainer);
+        fake1 = new Circle(30, "dodgerblue").pos(50, answerPositions[1], true, false, answerContainer);
         new Label({color:white, text: getRandomInt()+sum}).center(fake1);
         fake1.correct = false;
         answerArray[answerOrder["num"+answerPositions[1]]] = fake1
 
-        fake2 = new Circle(30, "DODGERBLUE").pos(50, answerPositions[2], true, false, answerContainer);
+        fake2 = new Circle(30, "dodgerblue").pos(50, answerPositions[2], true, false, answerContainer);
         new Label({color:white, text: getRandomInt()+sum}).center(fake2);
         fake2.correct = false;
         answerArray[answerOrder["num"+answerPositions[2]]] = fake2
@@ -315,7 +331,7 @@ var intervalID = interval(5000, function(){
             props:{
               y:727
             },
-            time:5000,
+            time:8000,
             ease:"linear",
             call:function(target){
               target.done=true;
@@ -337,7 +353,7 @@ frame.on("keydown", function(e){
           else{selectedAnswer = 0}
 
       loop(answerArray, function(answer){
-      answer.color = "DODGERBLUE";
+      answer.color = "dodgerblue";
     }) 
     currentAnswer = answerArray[selectedAnswer%answerArray.length];
     currentAnswer.color = "dimgray"; //the variable selected in the array turns red. it goes up to the length of the array (3)
@@ -353,7 +369,7 @@ frame.on("keydown", function(e){
       // selectedAnswer < answerArray.length
       // zog(e.keyCode);
       loop(answerArray, function(answer){
-        answer.color = "DODGERBLUE";
+        answer.color = "dodgerblue";
       })
       currentAnswer = answerArray[selectedAnswer%answerArray.length];
       currentAnswer.color = "dimgray"; //the variable selected in the array turns red. it goes up to the length of the array (3)
@@ -371,6 +387,7 @@ var score = new Label({
     backgroundColor: "rebeccapurple",
     paddingVertical: 10,
     paddingHorizontal: 40,
+    align: "center",
     color:white,
     size:50,
     corner:15
@@ -444,10 +461,12 @@ var points = new Label({
 //QUIT GAME*taken from above*******
  var quit = new Button({
       label:"End Game",
-      backgroundColor:"black",
+      backgroundColor:"deepskyblue",
       rollBackgroundColor:"dodgerblue",
-      corner:15
-      }).addTo(game).mov(770,50) //moved position
+      corner:15,
+      gloss: .1,
+      shadowColor: -1
+      }).addTo(game).mov(770,35) //moved position
 
   quit.on("click", function(){
   game.animate({
@@ -468,8 +487,6 @@ var points = new Label({
       box.removeFrom();
       frame.off("keydown", firingEvent);
       frame.color = green;
-      // we can still up/down arrow through the numbers, should we bother taking this off?
-      
       frame.asset("win.wav").play();
       var end = frame.asset("won.png").sca(.3).center().mov(null,-80);
 
@@ -483,9 +500,12 @@ var points = new Label({
 
       var again = new Button({
         label: "Play Again",
-        backgroundColor:"DEEPSKYBLUE",
-        rollBackgroundColor:"dodgerbLUE",
-        corner:15
+        backgroundColor:"deepskyblue",
+        rollBackgroundColor:"dodgerblue",
+        width: 250,
+        corner:15,
+        gloss: .1,
+        shadowColor: -1
       }).center().mov(null, 30);
 
 
@@ -539,9 +559,12 @@ var points = new Label({
 
       var again = new Button({
         label: "Play Again",
-        backgroundColor:"DEEPSKYBLUE",
-        rollBackgroundColor:"dodgerbLUE",
-        corner:15
+        backgroundColor:"deepskyblue",
+        rollBackgroundColor:"dodgerblue",
+        corner:15,
+        width: 250,
+        gloss: .1,
+        shadowColor: -1
       }).center().mov(null, 30);
     
     again.on("click", function(){
